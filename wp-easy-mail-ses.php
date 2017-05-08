@@ -9,7 +9,7 @@ Author URI: https://github.com/okamos
 License: GPL-2.0+
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 */
-define('WPEM4S_IDENTIFIER', 'wpem4s');
+define('WPEM4S_ID', 'wp-easy-mail-ses');
 
 define('WPEM4S_VERSION', '0.1.0');
 

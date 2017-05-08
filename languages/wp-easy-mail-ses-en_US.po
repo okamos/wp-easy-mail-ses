@@ -1,0 +1,46 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-05-08 19:01+0900\n"
+"PO-Revision-Date: 2017-05-08 19:27+0900\n"
+"Last-Translator: Shinichi Okamoto\n"
+"Language-Team: \n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.0.1\n"
+"X-Poedit-SearchPath-0: wp-easy-mail-ses\n"
+
+#: admin.php:12
+msgid "You do not have sufficient permissions to access this page"
+msgstr "You do not have sufficient permissions to access this page"
+
+#: tmpl/admin.php:6
+msgid "SES Easy mail"
+msgstr "SES Easy mail"
+
+#: tmpl/admin.php:10
+msgid "AWS access key id"
+msgstr "AWS access key ID"
+
+#: tmpl/admin.php:17
+msgid "AWS secret key ID"
+msgstr "AWS secret key ID"
+
+#: tmpl/admin.php:24
+msgid "AWS region"
+msgstr "AWS region"
+
+#: tmpl/admin.php:31
+msgid "Sender Email address"
+msgstr "Sender Email address"
+
+#: tmpl/admin.php:38
+msgid "Sender name"
+msgstr "Sender name"
+
+#: tmpl/admin.php:43
+msgid "Update"
+msgstr "Update"
