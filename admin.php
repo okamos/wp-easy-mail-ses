@@ -12,9 +12,69 @@ function wpem4s_options()
         wp_die(_e('You do not have sufficient permissions to access this page', WPEM4S_ID));
     }
 
+    $opts = get_option(WPEM4S_ID);
+    $update_name = 'update_credentials';
+
+    if (isset($_POST[$update_name])) {
+        $update_params = [
+            'access_key',
+            'secret_key',
+            'region',
+            'from_email',
+            'from_name'
+        ];
+
+        foreach ($update_params as $param) {
+            if (isset($_POST[$param]) && strlen($_POST[$param]) > 0) {
+                $opts[$param] = $_POST[$param];
+            }
+        }
+
+        if ($opts['access_key']
+            && $opts['secret_key']
+            && $opts['region']
+            && $opts['from_email']
+        ) {
+            $opts['verified'] = wpem4s_verify_ses($opts);
+        }
+
+        update_option(WPEM4S_ID, $opts);
+    }
+
     wp_enqueue_style(
         WPEM4S_ID . 'admin', WPEM4S_ID . '/css/styles.css'
     );
     include_once WPEM4S_PLUGIN_DIR . '/tmpl/admin.php' ;
+}
+
+function wpem4s_verify_ses($opts) {
+    if (!filter_var($opts['from_email'], FILTER_VALIDATE_EMAIL)) {
+        return false;
+    }
+    $credentials = array(
+        'aws_access_key_id' => $opts['access_key'],
+        'aws_secret_access_key' => $opts['secret_key'],
+        'region' => $opts['region']
+    );
+
+    $ses = new SimpleEmailService($credentials);
+    try {
+        $identities = $ses->getIdentityVerificationAttributes(
+            array(
+                $opts['from_email'],
+                explode('@', $opts['from_email'])[1] // extract domain
+            )
+        );
+    } catch(Exception $e) {
+        return false;
+    }
+    $verified = false;
+
+    foreach ($identities->entry as $entry) {
+        if ($entry->value->VerificationStatus == 'Success') {
+            $verified = true;
+        }
+    }
+    return $verified;
 }
 ?>

@@ -1,7 +1,3 @@
-<?php
-    $opts = get_option(WPEM4S_ID);
-?>
-
 <div class="wrap">
     <h2><?php _e('SES Easy mail', WPEM4S_ID) ?></h2>
     <form name="form" method="post" action="">
@@ -40,6 +36,13 @@
             </label>
         </div>
 
-        <input type="submit" value="<?php _e('Update', WPEM4S_ID); ?>">
+        <input type="submit" name="<?php echo $update_name ?>" value="<?php _e('Update', WPEM4S_ID); ?>">
     </form>
+    <?php
+    if ($opts['verified']) {
+        echo 'verified';
+    } else {
+        echo 'failed';
+    }
+    ?>
 </div>
