@@ -1,0 +1,29 @@
+.font-md {
+    font-size: 1.1em;
+}
+
+.field {
+    margin: 0;
+    padding: 6px 8px;
+}
+
+.field span {
+    display: inline-block;
+    width: 200px;
+}
+
+.field input {
+    width: 300px;
+}
+
+.green {
+    color: #7cb342;
+}
+
+.red {
+    color: #e53935;
+}
+
+.button-margin {
+    margin: 25px 0;
+}

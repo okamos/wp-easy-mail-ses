@@ -17,30 +17,62 @@ msgstr ""
 msgid "You do not have sufficient permissions to access this page"
 msgstr "You do not have sufficient permissions to access this page"
 
-#: tmpl/admin.php:6
-msgid "SES Easy mail"
-msgstr "SES Easy mail"
+#: tmpl/admin.php:2
+msgid "SES easy mail"
+msgstr "SES easy mail"
 
-#: tmpl/admin.php:10
+#: tmpl/admin.php:4
+msgid "AWS settings"
+msgstr "AWS Settings"
+
+#: tmpl/admin.php:7
 msgid "AWS access key id"
 msgstr "AWS access key ID"
 
-#: tmpl/admin.php:17
+#: tmpl/admin.php:14
 msgid "AWS secret key ID"
 msgstr "AWS secret key ID"
 
-#: tmpl/admin.php:24
+#: tmpl/admin.php:21
 msgid "AWS region"
 msgstr "AWS region"
 
-#: tmpl/admin.php:31
+#: tmpl/admin.php:27
+msgid "United States east 1"
+msgstr "N. Virginia"
+
+#: tmpl/admin.php:33
+msgid "United States west 2"
+msgstr "Oregon"
+
+#: tmpl/admin.php:39
+msgid "European Union west 1"
+msgstr "Ireland"
+
+#: tmpl/admin.php:45
+msgid "Sender settings"
+msgstr "Sender Information"
+
+#: tmpl/admin.php:48
 msgid "Sender Email address"
 msgstr "Sender Email address"
 
-#: tmpl/admin.php:38
+#: tmpl/admin.php:55
 msgid "Sender name"
 msgstr "Sender name"
 
-#: tmpl/admin.php:43
+#: tmpl/admin.php:61
 msgid "Update"
 msgstr "Update"
+
+#: tmpl/admin.php:64
+msgid "Verification status"
+msgstr "Verification Status"
+
+#: tmpl/admin.php:75
+msgid "Verified"
+msgstr "Success"
+
+#: tmpl/admin.php:77
+msgid "Failed"
+msgstr "Failure"

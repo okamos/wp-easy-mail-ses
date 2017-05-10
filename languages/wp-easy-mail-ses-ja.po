@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: 0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-05-08 19:01+0900\n"
-"PO-Revision-Date: 2017-05-08 19:27+0900\n"
+"PO-Revision-Date: 2017-05-10 16:51+0900\n"
 "Last-Translator: Shinichi Okamoto\n"
 "Language-Team: \n"
 "Language: ja\n"
@@ -17,30 +17,62 @@ msgstr ""
 msgid "You do not have sufficient permissions to access this page"
 msgstr "このページへアクセスするために必要な権限を持っていません"
 
-#: tmpl/admin.php:6
-msgid "SES Easy mail"
-msgstr "SES Easy mail"
+#: tmpl/admin.php:2
+msgid "SES easy mail"
+msgstr "SES easy mail"
 
-#: tmpl/admin.php:10
+#: tmpl/admin.php:4
+msgid "AWS settings"
+msgstr "AWS設定"
+
+#: tmpl/admin.php:7
 msgid "AWS access key id"
 msgstr "AWS アクセスキーID"
 
-#: tmpl/admin.php:17
+#: tmpl/admin.php:14
 msgid "AWS secret key ID"
 msgstr "AWS シークレットキーID"
 
-#: tmpl/admin.php:24
+#: tmpl/admin.php:21
 msgid "AWS region"
 msgstr "AWS リージョン"
 
-#: tmpl/admin.php:31
+#: tmpl/admin.php:27
+msgid "United States east 1"
+msgstr "バージニア北部"
+
+#: tmpl/admin.php:33
+msgid "United States west 2"
+msgstr "オレゴン"
+
+#: tmpl/admin.php:39
+msgid "European Union west 1"
+msgstr "アイルランド"
+
+#: tmpl/admin.php:45
+msgid "Sender settings"
+msgstr "送信者情報"
+
+#: tmpl/admin.php:48
 msgid "Sender Email address"
 msgstr "送信者メールアドレス"
 
-#: tmpl/admin.php:38
+#: tmpl/admin.php:55
 msgid "Sender name"
 msgstr "送信者名"
 
-#: tmpl/admin.php:43
+#: tmpl/admin.php:61
 msgid "Update"
 msgstr "更新"
+
+#: tmpl/admin.php:64
+msgid "Verification status"
+msgstr "検証状態"
+
+#: tmpl/admin.php:75
+msgid "Verified"
+msgstr "成功"
+
+#: tmpl/admin.php:77
+msgid "Failed"
+msgstr "失敗"
