@@ -73,6 +73,7 @@
     <?php
     if ($opts['verified']) {
         _e('Verified', WPEM4S_ID);
+        echo ':' . $opts['last_verified_at'];
     } else {
         _e('Failed', WPEM4S_ID);
     }

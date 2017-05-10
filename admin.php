@@ -36,6 +36,7 @@ function wpem4s_options()
             && $opts['from_email']
         ) {
             $opts['verified'] = wpem4s_verify_ses($opts);
+            $opts['last_verified_at'] = date_i18n('Y-m-d H:i:s');
         }
 
         update_option(WPEM4S_ID, $opts);

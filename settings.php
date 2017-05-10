@@ -20,7 +20,8 @@ function wpem4s_install()
             'region' => 'us-east-1',
             'from_email' => '',
             'from_name' => 'Information',
-            'verified' => false
+            'verified' => false,
+            'last_verified_at' => ''
         )
     );
 }
