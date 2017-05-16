@@ -15,7 +15,6 @@ class SimpleEmailService
     const SERVICE = 'email';
     const DOMAIN = 'amazonaws.com';
     const ALGORITHM = 'AWS4-HMAC-SHA256';
-    const ERROR = "Please check your aws_access_key_id and aws_secret_access_key.\nAnd set correct permissions to your user or group.";
 
     private $_aws_key;
     private $_aws_secret;
@@ -33,25 +32,25 @@ class SimpleEmailService
     private $_headers;
     private $_query_parameters;
 
+    private $_client;
+
     /**
      * It is required aws_access_key_id and aws_secret_access_key.
      * Defaults verification of SSL certificate used.
      *
-     * @param array   $credentials     It remains aws access_key_id and
-     *                                 aws_secret_access_key, region.
-     * @param boolean $ssl_verify_peer Require verification of peer name.
+     * @param string $access_key AWS access_key_id.
+     * @param string $secret_key AWS secret_access_key.
+     * @param string $region     AWS region. default us-east-1.
      */
-    public function __construct($credentials = array(), $ssl_verify_peer = true)
+    public function __construct($access_key, $secret_key, $region = 'us-east-1')
     {
-        $this->_aws_key = $credentials['aws_access_key_id'];
-        $this->_aws_secret = $credentials['aws_secret_access_key'];
-        // default is us-east-1
-        $this->_region = $credentials['region'] ? $credentials['region'] : 'us-east-1';
+        $this->_aws_key = $access_key;
+        $this->_aws_secret = $secret_key;
+        $this->_region = $region;
 
         $this->_host = self::SERVICE . '.' . $this->_region . '.' . self::DOMAIN;
         $this->_endpoint = 'https://' . self::SERVICE . '.' . $this->_region . '.' . self::DOMAIN;
-
-        $this->ssl_verify = $ssl_verify_peer;
+        $this->_client = new GuzzleHttp\Client(); 
     }
 
     /**
@@ -62,7 +61,7 @@ class SimpleEmailService
      *                              parameter is omitted, then all identities will 
      *                              be listed.
      *
-     * @return string[]
+     * @return string[] or Error
      */
     public function listIdentities($identity_type = '')
     {
@@ -81,12 +80,17 @@ class SimpleEmailService
         }
 
         $this->_generateSignature($parameters);
-        $context = $this->_createStreamContext();
-        if ($res = @file_get_contents($this->_endpoint . '?' . $this->_query_parameters, false, $context)) {
-            $identities = new SimpleXMLElement($res);
-            return $identities->ListIdentitiesResult->Identities->member;
+        $res = $this->_request();
+        if ($res['code'] == 200) {
+            $members = $res['body']->ListIdentitiesResult->Identities->member;
+            $ret = [];
+            foreach ($members as $member) {
+                $ret[] = (string) $member;
+            }
+            return $ret;
+        } else {
+            return new SimpleEmailServiceError((string) $res['body']->Error->Code);
         }
-        throw new Exception(self::ERROR);
     }
 
     /**
@@ -94,7 +98,7 @@ class SimpleEmailService
      *
      * @param string $email The email address to be verified.
      *
-     * @return string;
+     * @return string RequestId or Error
      */
     public function verifyEmailIdentity($email)
     {
@@ -112,12 +116,12 @@ class SimpleEmailService
         );
 
         $this->_generateSignature($parameters);
-        $context = $this->_createStreamContext();
-        if ($res = @file_get_contents($this->_endpoint . '?' . $this->_query_parameters, false, $context)) {
-            $xml = simplexml_load_string($res);
-            return $xml->ResponseMetadata->RequestId;
+        $res = $this->_request();
+        if ($res['code'] == 200) {
+            return (string) $res['body']->ResponseMetadata->RequestId;
+        } else {
+            return new SimpleEmailServiceError((string) $res['body']->Error->Code);
         }
-        throw new Exception(self::ERROR);
     }
 
     /**
@@ -126,7 +130,7 @@ class SimpleEmailService
      * @param string $identity The identity to be removed from the list of identities
      *                         for the AWS Account. An email address or domain.
      *
-     * @return string
+     * @return string RequestId or Error
      */
     public function deleteIdentity($identity)
     {
@@ -144,12 +148,12 @@ class SimpleEmailService
         );
 
         $this->_generateSignature($parameters);
-        $context = $this->_createStreamContext();
-        if ($res = @file_get_contents($this->_endpoint . '?' . $this->_query_parameters, false, $context)) {
-            $xml = simplexml_load_string($res);
-            return $xml->ResponseMetadata->RequestId;
+        $res = $this->_request();
+        if ($res['code'] == 200) {
+            return (string) $res['body']->ResponseMetadata->RequestId;
+        } else {
+            return new SimpleEmailServiceError((string) $res['body']->Error->Code);
         }
-        throw new Exception(self::ERROR);
     }
 
     /**
@@ -157,16 +161,10 @@ class SimpleEmailService
      *
      * @param string[] $identities List of string. (email or domain)
      *
-     * @return SimpleXMLElement {
-     *           ["entry"]=> array(
-     *             object {
-     *               ["key"]=> string,
-     *               ["value"]=> {
-     *                 ["VerificationToken"]=> string,
-     *                 ["VerificationStatus"]=> string
-     *               }
-     *             }
-     *           )
+     * @return object[] {
+     *           Email  => string,
+     *           Token  => string,
+     *           Status => string
      *         }
      */
     public function getIdentityVerificationAttributes($identities)
@@ -190,86 +188,60 @@ class SimpleEmailService
         }
 
         $this->_generateSignature($parameters);
-        $context = $this->_createStreamContext();
-        if ($res = @file_get_contents($this->_endpoint . '?' . $this->_query_parameters, false, $context)) {
-            $xml = simplexml_load_string($res);
-            return $xml->GetIdentityVerificationAttributesResult->VerificationAttributes;
+        $res = $this->_request();
+        if ($res['code'] == 200) {
+            $entries = $res['body']->GetIdentityVerificationAttributesResult->VerificationAttributes->entry;
+            $ret = array();
+            foreach ($entries as $entry) {
+                $ret[] = array(
+                    'Email' => (string) $entry->key,
+                    'Token' => (string) $entry->value->VerificationToken,
+                    'Status' => (string) $entry->value->VerificationStatus
+                );
+            }
+            return $ret;
+        } else {
+            return new SimpleEmailServiceError((string) $res['body']->Error->Code);
         }
-        throw new Exception(self::ERROR);
     }
 
     /**
      * Send the email to some specified addresses.
      *
-     * @param array $assets "to", "cc", "bcc" are destination for this email.
-     *                      "body" is the message to be sent.
-     *                      "subject" is the subject of the message.
+     * @param SimpleEmailServiceEnvelope $envelope Instance of
+     *                                   SimpleEmailServiceEnvelope class.
      *
-     * @return string.
-     *
-     * @todo Send raw message.
+     * @return string MessageId.
      */
-    public function sendEmail($assets = array())
+    public function sendEmail($envelope)
     {
-        $this->_action = 'SendEmail';
+        $validate = $envelope->validate();
+        if (is_object($validate)) {
+            return $validate;
+        }
+
+        $parameters = $envelope->buildParameters();
+        $this->_action = $envelope->action;
         $this->_method = 'POST';
         $this->_refreshDate();
 
-        $parameters = array(
-            'Message.Body.Text.Data' => $assets['body'],
-            'Message.Subject.Data' => $assets['subject'],
-            'Source' => $assets['from']
-        );
-
-        if (isset($asset['to'])) {
-            $this->addAddresses($assets['to']);
-        }
-        if (isset($asset['cc'])) {
-            $this->addAddresses($assets['cc'], 'cc');
-        }
-        if (isset($asset['bcc'])) {
-            $this->addAddresses($assets['bcc'], 'bcc');
-        }
-
         $this->_generateSignature($parameters);
-        $context = $this->_createStreamContext();
-        if ($res = @file_get_contents($this->_endpoint . '?' . $this->_query_parameters, false, $context)) {
-            $xml = simplexml_load_string($res);
-            return $xml->SendEmailResult->MessageId;
+        $res = $this->_request();
+        if ($res['code'] == 200) {
+            return (string) $res['body']->SendEmailResult->MessageId;
+        } else {
+            return new SimpleEmailServiceError((string) $res['body']->Error->Code);
         }
-        throw new Exception(self::ERROR);
     }
 
-    /**
-     * Add To: Cc: Bcc: to the destination for a email.
-     *
-     * @param string[] $addresses   List of emails.
-     * @param string   $destination Destination type. Possible values are "to" and
-     *                              "cc", "bcc".
-     *
-     * @return void
-     */
-    public function addAddresses($addresses, $destination = 'to')
-    {
-        $address_index = 1;
-        if (is_string($addresses)) {
-            $parameters['Destination.' . $destination . 'Addresses.member.' . $address_index] = $addresses;
-        }
-        if (is_array($addresses)) {
-            foreach ($addresses as $address) {
-                $parameters['Destination.' . $destination . 'Addresses.member.' . $address_index] = $address;
-                $address_index++;
-            }
-        }
-    }
 
     /**
      * Get your AWS account's sending limits.
      *
-     * @return SimpleXMLElement {
-     *           ["Max24HourSend"]=> string,
-     *           ["SentLast24Hours"]=> string,
-     *           ["MaxSendRate"]=> string
+     * @return object {
+     *           Max24HourSend   => string,
+     *           SentLast24Hours => string,
+     *           MaxSendRate     => string
      *         }
      */
     public function getSendQuota()
@@ -279,10 +251,16 @@ class SimpleEmailService
         $this->_refreshDate();
 
         $this->_generateSignature();
-        $context = $this->_createStreamContext();
-        if ($res = @file_get_contents($this->_endpoint . '?' . $this->_query_parameters, false, $context)) {
-            $xml = simplexml_load_string($res);
-            return $xml->GetSendQuotaResult;
+        $res = $this->_request();
+        if ($res['code'] == 200) {
+            $result = $res['body']->GetSendQuotaResult;
+            return array(
+                'MaxSendRate' => (string) $result->Max24HourSend,
+                'SentLast24Hours' => (string) $result->SentLast24Hours,
+                'MaxSendRate' => (string) $result->MaxSendRate
+            );
+        } else {
+            return new SimpleEmailServiceError((string) $res['body']->Error->Code);
         }
         throw new Exception(self::ERROR);
     }
@@ -290,12 +268,12 @@ class SimpleEmailService
     /**
      * Get SES sending statistics.
      *
-     * @return SimpleXMLElement {
-     *           ["Complaints"]=> string,
-     *           ["Rejects"]=> string,
-     *           ["Bounces"]=> string,
-     *           ["DeliveryAttempts"]=> string,
-     *           ["Timestamp"]=> string
+     * @return object {
+     *           Complaints       => string,
+     *           Rejects          => string,
+     *           Bounces          => string,
+     *           DeliveryAttempts => string,
+     *           Timestamp        => string
      *         }
      */
     public function getSendStatistics()
@@ -305,33 +283,19 @@ class SimpleEmailService
         $this->_refreshDate();
 
         $this->_generateSignature();
-        $context = $this->_createStreamContext();
-        if ($res = @file_get_contents($this->_endpoint . '?' . $this->_query_parameters, false, $context)) {
-            $xml = simplexml_load_string($res);
-            return $xml->GetSendStatisticsResult->SendDataPoints->member;
+        $res = $this->_request();
+        if ($res['code'] == 200) {
+            $result = $res['body']->GetSendStatisticsResult->SendDataPoints->member;
+            return array(
+                'Complaints' => (string) $result->Complaints,
+                'Rejects' => (string) $result->Rejects,
+                'Bounces' => (string) $result->Bounces,
+                'DeliveryAttempts' => (string) $result->DeliveryAttempts,
+                'Timestamp' => (string) $result->Timestamp
+            );
+        } else {
+            return new SimpleEmailServiceError((string) $res['body']->Error->Code);
         }
-        throw new Exception(self::ERROR);
-    }
-
-    /**
-     * Create and returns a stream context.
-     *
-     * @return A stream context resource.
-     */
-    private function _createStreamContext()
-    {
-        $opts = array(
-            'ssl' => array(
-                'verify_peer' => $this->ssl_verify,
-                'verify_peer_name' => $this->ssl_verify
-            ),
-            'http' => array(
-                'method' => $this->_method,
-                'header' => join("\n", $this->_headers) . "\n"
-            )
-        );
-
-        return stream_context_create($opts);
     }
 
     /**
@@ -393,9 +357,33 @@ class SimpleEmailService
         // task3
         $signing_key = $this->_generateSignatureKey();
         $signature = hash_hmac('sha256', $string_to_sign, $signing_key);
-        $this->_headers[] = 'Authorization:' . self::ALGORITHM . ' Credential=' . $this->_aws_key . '/' . $credential_scope . ', SignedHeaders=' . $signed_headers . ', Signature=' . $signature;
-        $this->_headers[] = 'x-amz-date:' . $this->_amz_date;
+        $this->_headers['Authorization'] = self::ALGORITHM . ' Credential=' . $this->_aws_key . '/' . $credential_scope . ', SignedHeaders=' . $signed_headers . ', Signature=' . $signature;
+        $this->_headers['x-amz-date'] = $this->_amz_date;
         $this->_query_parameters = $request_parameters;
+    }
+
+    /**
+     * Request handler.
+     *
+     * @return object {
+     *           code => integer,
+     *           body => SimpleXMLElement
+     *         }
+     */
+    private function _request()
+    {
+        $res = $this->_client->request(
+            $this->_method,
+            $this->_endpoint . '?' . $this->_query_parameters,
+            [
+                'headers' => $this->_headers,
+                'http_errors' => false
+            ]
+        );
+        return array(
+            'code' => $res->getStatusCode(),
+            'body' => new SimpleXMLElement($res->getBody())
+        );
     }
 }
 ?>

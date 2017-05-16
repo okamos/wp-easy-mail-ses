@@ -1,0 +1,5 @@
+{
+    "require": {
+        "okamos/php-ses": "^1.0"
+    }
+}
