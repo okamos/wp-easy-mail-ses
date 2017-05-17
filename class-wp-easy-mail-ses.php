@@ -99,7 +99,8 @@ class WpEasyMailSES {
                     $opts['access_key'], $opts['secret_key'], $opts['region']
                 );
                 if ($opts['from_name']) {
-                    $from = $opts['from_name'] . '<' . $opts['from_email'] . '>';
+                    // TODO: this encoding will be transferred to php-ses.
+                    $from = '=?' . $charset . '?B?' . base64_encode($opts['from_name']) . '?= <' . $opts['from_email'] . '>';
                 } else {
                     $from = $opts['from_email'];
                 }
