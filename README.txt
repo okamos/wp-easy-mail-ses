@@ -2,7 +2,7 @@
 Contributors: okamos
 Donate link:
 Tags: aws, ses, email
-Requires at least: 3.3
+Requires at least: 3.4
 Tested up to: 4.7.5
 Stable tag: 1.0.0
 License: GPLv2 or later
@@ -21,10 +21,10 @@ Features:
 
 * Setting AWS access_key_id, secret_key_id, email... etc.
 * Validation of Amazon API Credentials and Email.
+* Send test message.
 
 Roadmap:
 
-* Send test message.
 * Display send quota.
 
 == Installation ==

@@ -12,9 +12,9 @@
 $id = 'wp-easy-mail-ses';
 ?>
 <div class="wrap">
-    <h1><?php _e('SES easy mail', $id); ?></h1>
+    <h1><?php _e('WP easy mail SES', $id); ?></h1>
     <form name="form" method="post" action="">
-        <?php wp_nonce_field('verify_email', 'wpem4s'); ?>
+        <?php wp_nonce_field($id, 'verify_email'); ?>
         <h2><?php _e('AWS settings', $id) ?></h2>
         <div class="field">
             <label>
@@ -72,7 +72,7 @@ $id = 'wp-easy-mail-ses';
         </div>
 
         <div class="button-margin">
-            <input type="submit" class="button button-primary" name="<?php echo $update_name ?>" value="<?php _e('Update', $id); ?>">
+            <input type="submit" class="button button-primary" value="<?php _e('Update', $id); ?>">
         </div>
     </form>
     <h3><?php _e('Verification status', $id); ?></h3>
@@ -93,4 +93,20 @@ $id = 'wp-easy-mail-ses';
     }
     ?>
     </p>
+    <hr />
+    <h2><?php _e('Send test message', $id) ?></h2>
+    <form name="form2" method="post" action="">
+        <?php wp_nonce_field($id, 'send_test_email'); ?>
+        <div class="field">
+            <label>
+                <span><?php _e('Send Email address', $id); ?></span>
+                <input type="email" name="send_email"
+                       value="<?php echo esc_attr(wp_get_current_user()->user_email); ?>">
+            </label>
+        </div>
+
+        <div class="button-margin">
+            <input type="submit" class="button button-primary" value="<?php _e('Send Email', $id); ?>">
+        </div>
+    </form>
 </div>

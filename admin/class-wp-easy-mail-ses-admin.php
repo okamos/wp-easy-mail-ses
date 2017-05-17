@@ -42,8 +42,8 @@ class WpEasyMailSESAdmin
     public function add_option_page()
     {
         add_options_page(
-            'SES easy mail',
-            'SES easy mail',
+            'WP easy mail SES',
+            'WP easy mail SES',
             'manage_options',
             'wpem4s-settings',
             array($this, 'add_page')
@@ -62,9 +62,11 @@ class WpEasyMailSESAdmin
         }
 
         $opts = get_option($this->plugin_name);
-        $update_name = 'update_credentials';
 
-        if (!empty($_POST) && check_admin_referer('verify_email', 'wpem4s')) {
+        if (!empty($_POST)
+            && isset($_POST['verify_email'])
+            && check_admin_referer($this->plugin_name, 'verify_email')
+        ) {
             $update_params = [
                 'access_key',
                 'secret_key',
@@ -89,6 +91,21 @@ class WpEasyMailSESAdmin
             }
 
             update_option($this->plugin_name, $opts);
+            $this->_show_notice(__('Success Update', $this->plugin_name));
+        }
+        if (!empty($_POST)
+            && isset($_POST['send_test_email'])
+            && check_admin_referer($this->plugin_name, 'send_test_email')
+        ) {
+            $subject = __('Test Subject', $this->plugin_name);
+            $message = __('Test Message', $this->plugin_name);
+            $sent = wp_mail($_POST['send_email'], $subject, $message);
+
+            if ($sent) {
+                $this->_show_notice(__('Success Send', $this->plugin_name));
+            } else {
+                $this->_show_notice(__('Failed Send', $this->plugin_name), 'error');
+            }
         }
         include_once plugin_dir_path(__FILE__) . 'partials/' . $this->plugin_name . '-admin-display.php';
     }
@@ -129,6 +146,24 @@ class WpEasyMailSESAdmin
             }
         }
         return $verified;
+    }
+
+    /**
+     * Display the message with a white background and a green / yellow / red /
+     * blue left border.
+     *
+     * @param string $message Message to show to user
+     * @param string $status  success / warning / error / info
+     *
+     * @return void
+     */
+    private function _show_notice($message, $status = 'success')
+    {
+        ?>
+        <div class="notice notice-<?php echo $status ?> is-dismissible">
+            <p><?php echo $message ?></p>
+        </div>
+        <?php
     }
 }
 ?>

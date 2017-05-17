@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: 0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-05-08 19:01+0900\n"
-"PO-Revision-Date: 2017-05-08 19:27+0900\n"
+"PO-Revision-Date: 2017-05-17 17:23+0900\n"
 "Last-Translator: Shinichi Okamoto\n"
 "Language-Team: \n"
 "Language: en\n"
@@ -13,66 +13,98 @@ msgstr ""
 "X-Generator: Poedit 2.0.1\n"
 "X-Poedit-SearchPath-0: wp-easy-mail-ses\n"
 
-#: admin.php:12
+#: admin/class-wp-easy-mail-ses-admin.php:61
 msgid "You do not have sufficient permissions to access this page"
 msgstr "You do not have sufficient permissions to access this page"
 
-#: tmpl/admin.php:2
-msgid "SES easy mail"
-msgstr "SES easy mail"
+#: admin/class-wp-easy-mail-ses-admin.php:93
+msgid "Success Update"
+msgstr "Updated"
 
-#: tmpl/admin.php:4
+#: admin/class-wp-easy-mail-ses-admin.php:97
+msgid "Test Subject"
+msgstr "Test Send from WP easy mail SES"
+
+#: admin/class-wp-easy-mail-ses-admin.php:98
+msgid "Test Message"
+msgstr "Message here."
+
+#: admin/class-wp-easy-mail-ses-admin.php:102
+msgid "Success Send"
+msgstr "Sended."
+
+#: admin/class-wp-easy-mail-ses-admin.php:104
+msgid "Failed Send"
+msgstr "Failed send. Please check your access key or sender email."
+
+#: admin/partials/wp-easy-mail-ses-admin-display.php:15
+msgid "WP easy mail SES"
+msgstr "WP easy mail SES"
+
+#: admin/partials/wp-easy-mail-ses-admin-display.php:18
 msgid "AWS settings"
 msgstr "AWS Settings"
 
-#: tmpl/admin.php:7
+#: admin/partials/wp-easy-mail-ses-admin-display.php:21
 msgid "AWS access key id"
 msgstr "AWS access key ID"
 
-#: tmpl/admin.php:14
+#: admin/partials/wp-easy-mail-ses-admin-display.php:28
 msgid "AWS secret key ID"
 msgstr "AWS secret key ID"
 
-#: tmpl/admin.php:21
+#: admin/partials/wp-easy-mail-ses-admin-display.php:35
 msgid "AWS region"
 msgstr "AWS region"
 
-#: tmpl/admin.php:27
+#: admin/partials/wp-easy-mail-ses-admin-display.php:41
 msgid "United States east 1"
 msgstr "N. Virginia"
 
-#: tmpl/admin.php:33
+#: admin/partials/wp-easy-mail-ses-admin-display.php:47
 msgid "United States west 2"
 msgstr "Oregon"
 
-#: tmpl/admin.php:39
+#: admin/partials/wp-easy-mail-ses-admin-display.php:53
 msgid "European Union west 1"
 msgstr "Ireland"
 
-#: tmpl/admin.php:45
+#: admin/partials/wp-easy-mail-ses-admin-display.php:59
 msgid "Sender settings"
 msgstr "Sender Information"
 
-#: tmpl/admin.php:48
+#: admin/partials/wp-easy-mail-ses-admin-display.php:62
 msgid "Sender Email address"
 msgstr "Sender Email address"
 
-#: tmpl/admin.php:55
+#: admin/partials/wp-easy-mail-ses-admin-display.php:69
 msgid "Sender name"
 msgstr "Sender name"
 
-#: tmpl/admin.php:61
+#: admin/partials/wp-easy-mail-ses-admin-display.php:75
 msgid "Update"
 msgstr "Update"
 
-#: tmpl/admin.php:64
+#: admin/partials/wp-easy-mail-ses-admin-display.php:78
 msgid "Verification status"
 msgstr "Verification Status"
 
-#: tmpl/admin.php:75
+#: admin/partials/wp-easy-mail-ses-admin-display.php:89
 msgid "Verified"
 msgstr "Success"
 
-#: tmpl/admin.php:77
+#: admin/partials/wp-easy-mail-ses-admin-display.php:92
 msgid "Failed"
 msgstr "Failure"
+
+#: admin/partials/wp-easy-mail-ses-admin-display.php:97
+msgid "Send test message"
+msgstr "Send a test message"
+
+#: admin/partials/wp-easy-mail-ses-admin-display.php:102
+msgid "Send Email address"
+msgstr "Your email"
+
+#: admin/partials/wp-easy-mail-ses-admin-display.php:109
+msgid "Send Email"
+msgstr "Send"

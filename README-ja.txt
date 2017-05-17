@@ -2,7 +2,7 @@
 Contributors: okamos
 Donate link:
 Tags: aws, ses, email
-Requires at least: 3.3
+Requires at least: 3.4
 Tested up to: 4.7.5
 Stable tag: 1.0.0
 License: GPLv2 or later
@@ -21,10 +21,10 @@ Amazon SESを簡単にメールを送れます。
 
 * AWSのアクセスキーやシークレットキー、送信者Emailアドレスなどを設定できます。
 * 設定された認証情報やEmailアドレスが正いか検証します。
+* テストメッセージの送信
 
 ロードマップ:
 
-* テストメッセージの送信
 * 送信した情報や制限の表示
 
 == Installation ==
