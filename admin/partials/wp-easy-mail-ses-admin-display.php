@@ -12,8 +12,9 @@
 $id = 'wp-easy-mail-ses';
 ?>
 <div class="wrap">
-    <h1><?php _e('SES easy mail', $id) ?></h1>
+    <h1><?php _e('SES easy mail', $id); ?></h1>
     <form name="form" method="post" action="">
+        <?php wp_nonce_field('verify_email', 'wpem4s'); ?>
         <h2><?php _e('AWS settings', $id) ?></h2>
         <div class="field">
             <label>

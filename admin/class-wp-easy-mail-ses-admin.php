@@ -64,7 +64,7 @@ class WpEasyMailSESAdmin
         $opts = get_option($this->plugin_name);
         $update_name = 'update_credentials';
 
-        if (isset($_POST[$update_name])) {
+        if (!empty($_POST) && check_admin_referer('verify_email', 'wpem4s')) {
             $update_params = [
                 'access_key',
                 'secret_key',
