@@ -45,5 +45,5 @@ Roadmap:
 
 1.0 Initial working version.
 
-== Upgrade notice ==
+== Upgrade Notice ==
 

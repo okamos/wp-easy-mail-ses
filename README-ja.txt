@@ -45,5 +45,5 @@ Amazon SESを簡単にメールを送れます。
 
 1.0 Initial working version.
 
-== Upgrade notice ==
+== Upgrade Notice ==
 
