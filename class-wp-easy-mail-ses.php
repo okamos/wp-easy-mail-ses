@@ -19,7 +19,7 @@ class WpEasyMailSES {
     public function __construct()
     {
         $this->plugin_name = 'wp-easy-mail-ses';
-        $this->version = '1.0.0';
+        $this->version = '1.0.1';
 
         $this->_load_dependencies();
         $this->_set_locale();

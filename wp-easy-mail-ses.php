@@ -9,7 +9,7 @@
  * Plugin Name: WP Easy mail for SES
  * Plugin URI: https://github.com/okamos/wp-easy-mail-ses
  * Description: Drop-in replacement in wp_mail using the AWS SES.
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: Shinichi Okamoto
  * Author URI: https://github.com/okamos
  * License: GPL-2.0+
@@ -28,7 +28,7 @@ function activate_wp_easy_mail_ses()
     }
 
     add_option(
-        WPEM4S_ID, array(
+        'wp-easy-mail-ses', array(
             'access_key' => '',
             'secret_key' => '',
             'region' => 'us-east-1',
